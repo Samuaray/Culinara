@@ -8,6 +8,7 @@ struct CreateRecipeView: View {
 
     @State private var creationMethod: CreationMethod = .manual
     @State private var showAIGeneration = false
+    @State private var showManualForm = false
 
     enum CreationMethod {
         case manual
@@ -44,7 +45,7 @@ struct CreateRecipeView: View {
                         gradient: [.blue.opacity(0.6), .cyan.opacity(0.6)]
                     ) {
                         creationMethod = .manual
-                        // Navigate to manual form
+                        showManualForm = true
                     }
 
                     // Import from URL Button
@@ -84,6 +85,9 @@ struct CreateRecipeView: View {
             }
             .sheet(isPresented: $showAIGeneration) {
                 AIGenerationView()
+            }
+            .sheet(isPresented: $showManualForm) {
+                ManualRecipeFormView()
             }
         }
     }

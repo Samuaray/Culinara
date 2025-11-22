@@ -11,6 +11,8 @@ struct RecipeDetailView: View {
     @State private var showSubstitution = false
     @State private var selectedIngredient: Ingredient?
     @State private var servings: Int
+    @State private var showEditForm = false
+    @State private var showDeleteConfirmation = false
 
     init(recipe: Recipe) {
         self.recipe = recipe
@@ -180,6 +182,29 @@ struct RecipeDetailView: View {
                             .symbolRenderingMode(.hierarchical)
                     }
                 }
+
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button {
+                            showEditForm = true
+                        } label: {
+                            Label("Edit Recipe", systemImage: "pencil")
+                        }
+
+                        Divider()
+
+                        Button(role: .destructive) {
+                            showDeleteConfirmation = true
+                        } label: {
+                            Label("Delete Recipe", systemImage: "trash")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                            .symbolRenderingMode(.hierarchical)
+                    }
+                }
             }
             .sheet(isPresented: $showChat) {
                 ChatView(recipe: recipe)
@@ -187,7 +212,25 @@ struct RecipeDetailView: View {
             .sheet(isPresented: $showSubstitution) {
                 SubstitutionView(ingredient: selectedIngredient ?? recipe.ingredients.first!)
             }
+            .sheet(isPresented: $showEditForm) {
+                ManualRecipeFormView(recipeToEdit: recipe)
+            }
+            .confirmationDialog("Delete Recipe", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
+                Button("Delete Recipe", role: .destructive) {
+                    deleteRecipe()
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("Are you sure you want to delete \"\(recipe.title)\"? This action cannot be undone.")
+            }
         }
+    }
+
+    // MARK: - Helper Methods
+
+    private func deleteRecipe() {
+        modelContext.delete(recipe)
+        dismiss()
     }
 }
 
