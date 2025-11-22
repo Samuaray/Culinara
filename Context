@@ -1,50 +1,2148 @@
 📱 Product Requirements Document (PRD)
 Project Name: Culinara
 Tagline: Your AI-Powered Social Cookbook.
+Version: 2.0
+Last Updated: 2025-11-22
 
-1. Product Vision
-   To create a mobile-first web application that feels exactly like a native iOS app. It bridges the gap between a recipe storage utility and a social network, using Generative AI to act as a “Sous Chef” that helps users create, understand, and modify recipes on the fly.
-1. Core User Problems Solved
-1. “I have ingredients but no ideas”: AI Recipe Generation solves the “what’s for dinner” problem.
-1. “I can’t eat this ingredient”: The AI Substitution feature instantly finds dietary alternatives (Vegan/Kosher/Allergy).
-1. “I don’t understand this step”: The “Chat with Recipe” feature allows users to ask specific questions about the cooking process.
-1. “Recipe blogs are cluttered”: A clean, distraction-free iOS-style interface that focuses solely on cooking.
-1. User Personas
+═══════════════════════════════════════════════════════════════════════════════
+TABLE OF CONTENTS
+═══════════════════════════════════════════════════════════════════════════════
+1. Executive Summary
+2. Product Vision & Goals
+3. Market Analysis & Competitive Landscape
+4. User Research
+5. Technical Architecture
+6. Feature Specifications
+7. Design System & UI/UX Principles
+8. AI Integration Strategy
+9. Data Models & Schema
+10. Success Metrics & KPIs
+11. Non-Functional Requirements
+12. MVP Roadmap
+13. Risk Analysis & Mitigation
 
-- The Improviser: Throws ingredients together, needs AI to formalize it into a recipe.
-- The Planner: Curates a specific list of recipes for the week.
-- The Learner: Needs help understanding terms and finding substitutes.
+═══════════════════════════════════════════════════════════════════════════════
+1. EXECUTIVE SUMMARY
+═══════════════════════════════════════════════════════════════════════════════
 
-1. Technical Stack (Recommended for Vibe Coding)
+Culinara is a next-generation mobile-first web application that reimagines the digital cookbook experience by combining AI-powered recipe assistance with social discovery features. Unlike traditional recipe apps that simply store recipes, Culinara acts as an intelligent cooking companion—helping users generate recipes from available ingredients, understand complex cooking techniques, and adapt recipes to dietary restrictions in real-time.
 
-- Frontend: React (Vite), Tailwind CSS (for styling).
-- Design System: Custom “iOS-Web” Design System (using the components we built).
-- AI: Google Gemini API (Flash 2.5 for speed, Pro 3 for complex reasoning).
-- Backend (Future): Supabase or Firebase (for Auth & Database).
-- State: React Context or Zustand.
-  🚀 MVP Roadmap (Phased Execution)
-  Since you are “vibe coding,” we will break this down into Prompt-sized phases.
-  Phase 1: The “Pocket Chef” (Single User)
-  Goal: A fully functional personal recipe book with AI powers. (This is close to where the code is now).
-- Features:
-  - Recipe Feed: View hardcoded + local storage recipes.
-  - Recipe Card: iOS App Store style cards.
-  - Detailed View: Full-screen modal with ingredients and steps.
-  - Creation Flow: Full-screen modal form with AI Auto-fill.
-  - Magic Sub: Ingredient substitution finder (Vegan/Kosher).
-  - Sous Chef Chat: Chat with the specific recipe context.
-- Data: localStorage only.
-  Phase 2: The “Social Kitchen” (Data & Images)
-  Goal: Make it real. Save data to a database and handle real images.
-- Features:
-  - User Auth: Sign up / Login.
-  - Database: Move from localStorage to Supabase/Firebase.
-  - Image Upload: Allow users to upload photos of their food (store in bucket).
-  - Public/Private Toggle: Actually filter the feed based on this flag.
-  - Likes/Saves: Ability to “heart” community recipes.
-    Phase 3: The “AI Visionary” (Advanced AI)
-    Goal: Utilize the camera and multimodal capabilities.
-- Features:
-  - Snap-to-Recipe: Take a photo of ingredients in your fridge -> AI generates a recipe.
-  - Cookbook Digitizer: Take a photo of a handwritten grandma’s recipe -> AI converts it to digital text in the app.
-  - Voice Mode: Hands-free “Next step” commands while cooking.
+KEY DIFFERENTIATORS:
+• Native iOS-quality experience delivered through web technologies
+• AI "Sous Chef" that understands context and provides personalized guidance
+• Seamless blend of personal recipe management and community discovery
+• Camera-first interactions for ingredient recognition and recipe digitization
+• Voice-enabled hands-free cooking mode for active kitchen use
+
+TARGET MARKET:
+• Primary: Home cooks aged 25-45 who use AI tools in daily life
+• Secondary: Food enthusiasts who share recipes on social media
+• Tertiary: Dietary-restricted individuals seeking ingredient alternatives
+
+═══════════════════════════════════════════════════════════════════════════════
+2. PRODUCT VISION & GOALS
+═══════════════════════════════════════════════════════════════════════════════
+
+VISION STATEMENT:
+To create a mobile-first web application that feels exactly like a native iOS app, bridging the gap between a recipe storage utility and a social network, using Generative AI to act as a "Sous Chef" that helps users create, understand, and modify recipes on the fly.
+
+PRODUCT GOALS:
+1. Eliminate Friction: Reduce recipe discovery and adaptation from 15+ minutes to under 60 seconds
+2. Democratize Cooking: Make gourmet techniques accessible through AI-guided explanations
+3. Preserve Heritage: Digitize family recipes before they're lost
+4. Build Community: Connect home cooks around shared culinary interests
+5. Sustainable Cooking: Reduce food waste through intelligent ingredient utilization
+
+SUCCESS CRITERIA (6 MONTHS POST-LAUNCH):
+• 10,000+ active users
+• 50,000+ recipes created or imported
+• 75%+ user retention after 30 days
+• 4.5+ star rating on app stores
+• 5+ AI interactions per user per session
+
+═══════════════════════════════════════════════════════════════════════════════
+3. MARKET ANALYSIS & COMPETITIVE LANDSCAPE
+═══════════════════════════════════════════════════════════════════════════════
+
+MARKET OPPORTUNITY:
+• Global recipe app market: $2.5B+ and growing 12% annually
+• 73% of millennials use recipe apps weekly
+• AI cooking assistants are nascent but rapidly growing segment
+
+COMPETITIVE ANALYSIS:
+
+┌─────────────┬──────────────┬──────────────┬──────────────┬──────────────┐
+│  Feature    │   Culinara   │  Paprika     │  Whisk       │  Mealime     │
+├─────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
+│ AI Recipe   │      ✅      │      ❌      │      ❌      │      ❌      │
+│ Generation  │              │              │              │              │
+├─────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
+│ AI Chat     │      ✅      │      ❌      │      ❌      │      ❌      │
+│ Support     │              │              │              │              │
+├─────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
+│ Social      │      ✅      │      ❌      │      ✅      │      ❌      │
+│ Features    │              │              │              │              │
+├─────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
+│ Camera      │      ✅      │      ❌      │      ❌      │      ❌      │
+│ Recognition │              │              │              │              │
+├─────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
+│ Voice Mode  │      ✅      │      ❌      │      ❌      │      ❌      │
+├─────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
+│ iOS Feel    │      ✅      │      ⚠️      │      ⚠️      │      ✅      │
+└─────────────┴──────────────┴──────────────┴──────────────┴──────────────┘
+
+COMPETITIVE ADVANTAGES:
+1. AI-First Approach: Built around AI from day one, not bolted on
+2. Multimodal Input: Camera + Voice + Text for maximum flexibility
+3. Context-Aware Intelligence: AI understands the entire recipe, not just keywords
+4. iOS-Quality UX: Premium mobile experience without app store gatekeeping
+5. Privacy-Focused: User owns their data, recipes stay private by default
+
+═══════════════════════════════════════════════════════════════════════════════
+4. USER RESEARCH
+═══════════════════════════════════════════════════════════════════════════════
+
+4.1 CORE USER PROBLEMS SOLVED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Problem 1: "I have ingredients but no ideas"
+• Pain Point: Staring at fridge contents, no inspiration
+• Current Workaround: Google searches, scrolling recipe sites for 20+ minutes
+• Culinara Solution: AI Recipe Generation from ingredient list in 30 seconds
+• Impact: Reduces decision fatigue, minimizes food waste
+
+Problem 2: "I can't eat this ingredient"
+• Pain Point: Allergies, dietary restrictions, religious requirements
+• Current Workaround: Manual recipe adaptation, often resulting in poor results
+• Culinara Solution: AI Substitution with reasoning (e.g., "Cashew cream provides similar richness to heavy cream while being vegan")
+• Impact: Makes recipes accessible to everyone
+
+Problem 3: "I don't understand this step"
+• Pain Point: Unfamiliar cooking terms, vague instructions
+• Current Workaround: YouTube videos, cooking forums, asking friends
+• Culinara Solution: "Chat with Recipe" for step-by-step clarification
+• Impact: Builds cooking confidence, reduces errors
+
+Problem 4: "Recipe blogs are cluttered"
+• Pain Point: Ads, life stories, popups before getting to the recipe
+• Current Workaround: Scroll desperately, use reader mode, copy-paste to notes
+• Culinara Solution: Clean, distraction-free iOS-style interface
+• Impact: Respects user's time and attention
+
+Problem 5: "My grandma's recipes will be lost"
+• Pain Point: Handwritten recipes fade, boxes get lost in moves
+• Current Workaround: Manually type them out (rarely happens)
+• Culinara Solution: Cookbook Digitizer uses OCR + AI to preserve recipes
+• Impact: Cultural preservation, family legacy protection
+
+4.2 USER PERSONAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PERSONA 1: Sarah "The Improviser"
+───────────────────────────────────────
+Demographics:
+• Age: 29, Software Engineer, San Francisco
+• Tech Savvy: Early adopter of AI tools (ChatGPT Plus subscriber)
+• Cooking Skill: Intermediate, learned from YouTube
+
+Behaviors:
+• Shops without a list, buys what looks good
+• Cooks 4-5 nights/week, often improvising
+• Uses cooking as creative outlet after coding all day
+• Shares food photos on Instagram Stories
+
+Pain Points:
+• "I buy ingredients on impulse, then forget to use them"
+• "I know flavor combinations but struggle with proportions"
+• "I want to cook healthy but not follow strict recipes"
+
+How Culinara Helps:
+• Fridge-to-Recipe AI: Photos of ingredients → instant recipe
+• Flavor Balancing: AI suggests adjustments as she cooks
+• Quick Save: "That turned out great!" → Save with one tap
+
+User Journey:
+1. Opens fridge, sees chicken, peppers, coconut milk
+2. Opens Culinara, takes photo or lists ingredients
+3. AI suggests Thai curry with step-by-step guidance
+4. Asks "Can I use ginger powder instead?" → AI says yes with ratio
+5. Saves successful recipe to "Weeknight Winners" collection
+
+───────────────────────────────────────
+PERSONA 2: Marcus "The Planner"
+───────────────────────────────────────
+Demographics:
+• Age: 35, Project Manager, Chicago
+• Family: Married with 2 kids (ages 5 and 8)
+• Cooking Skill: Advanced, learned from parents
+
+Behaviors:
+• Meal preps Sunday for entire week
+• Curates recipes based on sales/seasonal produce
+• Batch cooks and freezes portions
+• Tracks family favorites for rotation
+
+Pain Points:
+• "I have recipes scattered across apps, bookmarks, and printed cards"
+• "I forget which meals my kids actually ate"
+• "Scaling recipes for batch cooking is tedious"
+
+How Culinara Helps:
+• Unified Library: All recipes in one place, tagged by meal type
+• Smart Collections: "Kid-Approved," "Freezer-Friendly," "Under 30 Min"
+• Auto-Scaling: "Make this for 8 servings" → instant recalculation
+• Meal Planning: Drag recipes to calendar, generates shopping list
+
+User Journey:
+1. Saturday morning: Plans next week's dinners
+2. Browses "Family Favorites" and "New to Try" feeds
+3. Drags 5 recipes to meal calendar
+4. Culinara generates consolidated shopping list
+5. Checks off ingredients already in pantry
+6. Exports list to grocery app or shares with partner
+
+───────────────────────────────────────
+PERSONA 3: Priya "The Learner"
+───────────────────────────────────────
+Demographics:
+• Age: 24, Medical Student, Boston
+• Dietary: Vegetarian (cultural + ethical)
+• Cooking Skill: Beginner, learning independence
+
+Behaviors:
+• Follows recipes exactly, afraid to deviate
+• Watches entire recipe video before starting
+• Struggles with cooking terminology
+• Wants to recreate mom's cooking from memory
+
+Pain Points:
+• "What does 'fold in' actually mean?"
+• "I don't know if this looks right at each stage"
+• "Most recipes assume I know techniques I don't"
+
+How Culinara Helps:
+• Sous Chef Chat: "What does the batter look like when it's ready?" → AI shows visual description
+• Technique Library: Tappable terms link to explanations
+• Confidence Building: "Does this look right?" → Upload photo for AI feedback
+• Cultural Recipes: AI helps recreate mom's recipes from description
+
+User Journey:
+1. Wants to make samosas like mom makes
+2. Describes the filling and process to AI
+3. AI generates structured recipe with her family's flavors
+4. While cooking, asks "How thin should I roll the dough?"
+5. AI responds: "About 1/8 inch—you should be able to almost see through it"
+6. Saves successful attempt with notes: "Need more ginger next time"
+
+───────────────────────────────────────
+PERSONA 4: David "The Curator"
+───────────────────────────────────────
+Demographics:
+• Age: 42, Restaurant Manager, Austin
+• Cooking Skill: Professional-level home cook
+• Social: Food blogger with 15K Instagram followers
+
+Behaviors:
+• Tests 10+ recipes per week
+• Modifies every recipe to improve it
+• Documents process with professional photos
+• Shares recipes publicly, builds community
+
+Pain Points:
+• "Recipe apps aren't designed for content creators"
+• "I want to share my modifications without losing original"
+• "Need better photo management within recipes"
+
+How Culinara Helps:
+• Version Control: Fork recipes, track modifications
+• Photo Gallery: Multiple photos per recipe (ingredients, process, final)
+• Public Profiles: Share recipes with followers, get feedback
+• Attribution: Credit original recipe sources properly
+
+User Journey:
+1. Finds community recipe for "Classic Tiramisu"
+2. Forks it to his profile
+3. Modifies: adds espresso powder, uses mascarpone alternative
+4. Cooks, uploads 5 process photos
+5. Publishes as "Texas-Style Tiramisu with Bourbon"
+6. Community comments, saves, and remixes his version
+
+═══════════════════════════════════════════════════════════════════════════════
+5. TECHNICAL ARCHITECTURE
+═══════════════════════════════════════════════════════════════════════════════
+
+5.1 TECHNOLOGY STACK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FRONTEND:
+┌────────────────┬────────────────────────────────────────────────────────┐
+│ React 18+      │ Component framework with Concurrent Mode              │
+│ Vite 5+        │ Fast build tool, HMR for development                  │
+│ TypeScript     │ Type safety, better IDE support                       │
+│ Tailwind CSS   │ Utility-first styling with custom iOS design tokens   │
+│ Framer Motion  │ Fluid iOS-style animations                            │
+│ React Router   │ Client-side routing with smooth transitions           │
+│ Zustand        │ Lightweight state management (preferred over Context) │
+│ React Query    │ Server state, caching, optimistic updates             │
+└────────────────┴────────────────────────────────────────────────────────┘
+
+AI INTEGRATION:
+┌────────────────┬────────────────────────────────────────────────────────┐
+│ Gemini 2.0     │ Primary AI engine                                     │
+│ Flash Model    │ Fast operations: substitutions, quick queries         │
+│ Pro Model      │ Complex reasoning: recipe generation, modifications   │
+│ Vision API     │ Image recognition for ingredients and cookbook OCR    │
+│ Vercel AI SDK  │ Streaming responses, unified AI interface             │
+└────────────────┴────────────────────────────────────────────────────────┘
+
+BACKEND & INFRASTRUCTURE:
+┌────────────────┬────────────────────────────────────────────────────────┐
+│ Supabase       │ PostgreSQL database, Auth, Storage, Realtime          │
+│ Supabase Auth  │ Email/password, OAuth (Google, Apple)                 │
+│ Storage        │ Recipe images, user uploads, optimized delivery       │
+│ Row Level Sec  │ Database-level privacy controls                       │
+│ Edge Functions │ AI proxy, image processing, webhook handlers          │
+└────────────────┴────────────────────────────────────────────────────────┘
+
+DEPLOYMENT:
+┌────────────────┬────────────────────────────────────────────────────────┐
+│ Vercel         │ Frontend hosting, edge network, preview deployments   │
+│ GitHub Actions │ CI/CD pipeline, automated testing                     │
+│ Sentry         │ Error tracking, performance monitoring                │
+│ PostHog        │ Product analytics, feature flags                      │
+└────────────────┴────────────────────────────────────────────────────────┘
+
+5.2 SYSTEM ARCHITECTURE DIAGRAM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                         USER DEVICES                                 │
+│                    (Mobile Web, Desktop Web)                         │
+└────────────────────────┬────────────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                      VERCEL EDGE NETWORK                             │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐              │
+│  │  React App   │  │  API Routes  │  │  Middleware  │              │
+│  │  (Static)    │  │  (Serverless)│  │  (Auth)      │              │
+│  └──────────────┘  └──────────────┘  └──────────────┘              │
+└────────┬────────────────────┬────────────────────┬──────────────────┘
+         │                    │                    │
+         ▼                    ▼                    ▼
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│   SUPABASE      │  │  GOOGLE AI      │  │  CDN / STORAGE  │
+│                 │  │                 │  │                 │
+│ ┌─────────────┐ │  │ ┌─────────────┐ │  │ ┌─────────────┐ │
+│ │ PostgreSQL  │ │  │ │ Gemini Pro  │ │  │ │ Image Opt   │ │
+│ │ Database    │ │  │ │ (Reasoning) │ │  │ │ (Cloudinary)│ │
+│ └─────────────┘ │  │ └─────────────┘ │  │ └─────────────┘ │
+│                 │  │                 │  │                 │
+│ ┌─────────────┐ │  │ ┌─────────────┐ │  │ ┌─────────────┐ │
+│ │ Auth System │ │  │ │ Gemini Flash│ │  │ │ Recipe Imgs │ │
+│ │ (JWT)       │ │  │ │ (Fast Ops)  │ │  │ │ (Supabase)  │ │
+│ └─────────────┘ │  │ └─────────────┘ │  │ └─────────────┘ │
+│                 │  │                 │  │                 │
+│ ┌─────────────┐ │  │ ┌─────────────┐ │  └─────────────────┘
+│ │ Storage     │ │  │ │ Vision API  │ │
+│ │ (S3-compat) │ │  │ │ (OCR/Image) │ │
+│ └─────────────┘ │  │ └─────────────┘ │
+└─────────────────┘  └─────────────────┘
+
+5.3 API DESIGN PRINCIPLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+REST ENDPOINTS (Supabase Auto-Generated):
+• GET    /api/recipes         - List recipes (with filters)
+• GET    /api/recipes/:id     - Get single recipe
+• POST   /api/recipes         - Create recipe
+• PATCH  /api/recipes/:id     - Update recipe
+• DELETE /api/recipes/:id     - Delete recipe
+• GET    /api/users/:id       - Get user profile
+• GET    /api/feed            - Get personalized feed
+
+AI ENDPOINTS (Custom Edge Functions):
+• POST /api/ai/generate       - Generate recipe from ingredients
+• POST /api/ai/substitute     - Find ingredient substitution
+• POST /api/ai/chat           - Chat with recipe context
+• POST /api/ai/ocr            - Extract recipe from image
+• POST /api/ai/analyze-image  - Identify ingredients from photo
+
+REAL-TIME SUBSCRIPTIONS (Supabase Realtime):
+• recipes:INSERT              - New community recipes
+• likes:INSERT                - Recipe liked notifications
+• comments:INSERT             - New comment notifications
+
+═══════════════════════════════════════════════════════════════════════════════
+6. FEATURE SPECIFICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+6.1 RECIPE FEED (Home Screen)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DESCRIPTION:
+The main discovery interface showing user's personal recipes and community content in a curated, Instagram-style feed.
+
+COMPONENTS:
+┌─────────────────────────────────────────────────────────────┐
+│  ☰  Culinara                                    🔍  👤      │ ← Header
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Filters: [All] [Breakfast] [Dinner] [Dessert] [Saved] →   │ ← Filter Chips
+│                                                              │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │ 🖼️  Homemade Margherita Pizza                        │  │
+│  │     by @sarah_cooks                                  │  │ ← Recipe Card
+│  │     ⏱️ 30 min  👤 4 servings  ❤️ 234                 │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                                                              │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │ 🖼️  Grandma's Chocolate Chip Cookies                 │  │
+│  │     by You (Private)                                 │  │
+│  │     ⏱️ 45 min  👤 24 cookies  ⭐ Favorite            │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+                    [+] FAB Button
+
+USER INTERACTIONS:
+• Tap Card → Open detailed recipe view (full-screen modal)
+• Long Press → Quick actions (Save, Share, Add to Collection)
+• Pull to Refresh → Reload feed
+• Infinite Scroll → Load more recipes
+• Filter Chips → Narrow by meal type
+• Search Icon → Full-text recipe search
+• FAB (+) → Create new recipe
+
+LOGIC & FILTERING:
+┌──────────────────┬────────────────────────────────────────────┐
+│ Feed Type        │ Content Shown                              │
+├──────────────────┼────────────────────────────────────────────┤
+│ "For You"        │ AI-personalized: user's recipes + trending │
+│                  │ community recipes based on taste profile   │
+├──────────────────┼────────────────────────────────────────────┤
+│ "Following"      │ Recipes from users you follow              │
+├──────────────────┼────────────────────────────────────────────┤
+│ "My Recipes"     │ Only user's created/saved recipes          │
+├──────────────────┼────────────────────────────────────────────┤
+│ "Trending"       │ Most-liked recipes this week               │
+└──────────────────┴────────────────────────────────────────────┘
+
+TECHNICAL NOTES:
+• Virtualized scrolling for performance (react-window)
+• Image lazy loading with blur-up placeholders
+• Optimistic UI updates for likes/saves
+• Cache feed data for offline viewing
+
+6.2 RECIPE DETAIL VIEW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DESCRIPTION:
+Full-screen modal displaying complete recipe with ingredients, instructions, and AI-powered interactions.
+
+LAYOUT:
+┌─────────────────────────────────────────────────────────────┐
+│  ← Back                 ⋮ More                              │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│           🖼️ HERO IMAGE (Full Width)                       │
+│                                                              │
+├─────────────────────────────────────────────────────────────┤
+│  Chicken Tikka Masala                           ❤️ 234      │
+│  by @priya_kitchen                              🔖 Save     │
+│                                                              │
+│  ⏱️ 45 min  👤 4 servings  🔥 Medium                        │
+│                                                              │
+│  "Rich, creamy Indian curry with tender chicken in a        │
+│  spiced tomato sauce. Perfect for weeknight dinners."       │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │ 🧪 MAGIC SUB  │  💬 CHAT WITH RECIPE │  📤 SHARE    │    │ ← Action Bar
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  ═══ INGREDIENTS ═══                         [Scale: 4 ▼]   │
+│                                                              │
+│  Marinade:                                                   │
+│  ☐ 500g chicken breast, cubed                               │
+│  ☐ 1 cup yogurt                                             │
+│  ☐ 2 tbsp tikka masala spice    [🔄 Substitute?]           │
+│                                                              │
+│  Sauce:                                                      │
+│  ☐ 1 can crushed tomatoes                                   │
+│  ☐ 1 cup heavy cream            [🔄 Substitute?]           │
+│  ☐ 2 tbsp butter                                            │
+│                                                              │
+│  ═══ INSTRUCTIONS ═══                                       │
+│                                                              │
+│  1. Marinate chicken in yogurt and spices for 30 min       │
+│     💬 "Can I marinate overnight?"                          │
+│                                                              │
+│  2. Heat oil in large pan, cook chicken until browned      │
+│     ⏲️ Timer: 8 minutes                                     │
+│                                                              │
+│  3. Add tomatoes and simmer for 15 minutes                 │
+│                                                              │
+│  4. Stir in cream, simmer 5 more minutes                   │
+│                                                              │
+│  ═══ NOTES & TIPS ═══                                      │
+│                                                              │
+│  • Serve with basmati rice or naan bread                   │
+│  • Can be frozen for up to 3 months                        │
+│                                                              │
+│  ═══ NUTRITION (per serving) ═══                           │
+│  Calories: 425 | Protein: 32g | Carbs: 18g | Fat: 24g     │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+
+KEY FEATURES:
+1. Ingredient Checkboxes: Track progress while cooking
+2. Substitution Buttons: AI suggests alternatives for any ingredient
+3. Inline Chat: Ask questions about specific steps
+4. Smart Timers: One-tap timers for each cooking step
+5. Scaling: Adjust servings, auto-recalculates all quantities
+6. Shopping Mode: Export unchecked ingredients to list
+
+INTERACTION FLOWS:
+
+Flow: Magic Substitution
+─────────────────────────
+User taps [🔄 Substitute?] next to "heavy cream"
+  ↓
+Modal appears: "What's your reason?"
+  • Vegan
+  • Kosher
+  • Allergy
+  • Just don't have it
+  ↓
+User selects "Vegan"
+  ↓
+AI responds in <2 seconds:
+  "Coconut cream (1 cup)
+   → Provides similar richness and mouthfeel
+   → Use full-fat for best results
+   → Will add subtle coconut flavor"
+  ↓
+User taps "Apply" → Ingredient updates in recipe
+
+Flow: Chat with Recipe
+─────────────────────────
+User taps "💬 Chat with Recipe"
+  ↓
+Sheet slides up from bottom with chat interface
+  ↓
+AI has full recipe context pre-loaded
+  ↓
+User: "Can I use chicken thighs instead?"
+  ↓
+AI: "Yes! Chicken thighs will actually be more
+     flavorful and moist. Use the same quantity
+     but add 5 minutes to the cooking time in
+     step 2 to ensure they're fully cooked."
+
+6.3 RECIPE CREATION FLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DESCRIPTION:
+Multi-path recipe creation: Manual entry, AI generation, or import from URL/photo.
+
+ENTRY POINTS:
+┌─────────────────────────────────────────────────────────┐
+│  How would you like to create?                          │
+│                                                          │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  ✨ Generate with AI                             │   │
+│  │  Tell me what you have, I'll create a recipe    │   │
+│  └──────────────────────────────────────────────────┘   │
+│                                                          │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  ✍️  Write Manually                              │   │
+│  │  I have a recipe ready to type in               │   │
+│  └──────────────────────────────────────────────────┘   │
+│                                                          │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  🔗 Import from URL                              │   │
+│  │  Paste a link from any recipe website           │   │
+│  └──────────────────────────────────────────────────┘   │
+│                                                          │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  📸 Scan Recipe Card                             │   │
+│  │  Digitize a handwritten or printed recipe       │   │
+│  └──────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────┘
+
+PATH 1: AI GENERATION
+─────────────────────────────────────────────────────────────
+Step 1: Ingredient Input
+┌─────────────────────────────────────────────────────────┐
+│  What ingredients do you have?                          │
+│                                                          │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │ 📸 Take Photo  │  ✍️ Type List  │  🎤 Speak       │ │
+│  └────────────────────────────────────────────────────┘ │
+│                                                          │
+│  [Text Area]                                            │
+│  chicken breast, bell peppers, onions, coconut milk,   │
+│  curry powder, rice                                     │
+│                                                          │
+│  Optional Preferences:                                  │
+│  ⏱️ Time available: [30 minutes ▼]                     │
+│  👤 Servings: [4 ▼]                                     │
+│  🍽️ Cuisine: [Any ▼]                                   │
+│  🌱 Dietary: [None ▼]                                   │
+│                                                          │
+│                             [Generate Recipe →]         │
+└─────────────────────────────────────────────────────────┘
+
+Step 2: AI Processing (with streaming)
+┌─────────────────────────────────────────────────────────┐
+│  ✨ Creating your recipe...                             │
+│                                                          │
+│  ⚡ Analyzing ingredients...                            │
+│  🧠 Selecting flavor profile...                         │
+│  👨‍🍳 Writing instructions...                            │
+│                                                          │
+│  [Progress Animation]                                   │
+└─────────────────────────────────────────────────────────┘
+
+Step 3: Review & Edit
+┌─────────────────────────────────────────────────────────┐
+│  Thai Coconut Chicken Curry                             │
+│  Generated by AI • 30 min • 4 servings                  │
+│                                                          │
+│  [Generated Recipe Content]                             │
+│                                                          │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │ 🔄 Regenerate  │  ✏️ Edit  │  ✅ Save Recipe      │ │
+│  └────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────┘
+
+PATH 2: URL IMPORT
+─────────────────────────────────────────────────────────────
+Step 1: URL Input
+┌─────────────────────────────────────────────────────────┐
+│  Paste recipe URL                                       │
+│                                                          │
+│  [https://example.com/amazing-brownies]                │
+│                                                          │
+│  Supports: AllRecipes, NYT Cooking, Bon Appétit,       │
+│  Food Network, and 500+ recipe sites                   │
+│                                                          │
+│                                      [Import →]         │
+└─────────────────────────────────────────────────────────┘
+
+Step 2: AI Parsing & Cleanup
+• Scrapes recipe content using AI
+• Removes ads, stories, unnecessary content
+• Standardizes format to Culinara schema
+• Preserves attribution to original source
+
+Step 3: Review & Save
+• User can edit any field before saving
+• Option to add personal notes
+• Attribution footer: "Originally from [source]"
+
+PATH 3: PHOTO OCR
+─────────────────────────────────────────────────────────────
+Step 1: Photo Capture
+┌─────────────────────────────────────────────────────────┐
+│  📸 Position recipe card in frame                       │
+│                                                          │
+│  [Camera Viewfinder with overlay guides]               │
+│                                                          │
+│  Tips:                                                  │
+│  • Ensure good lighting                                │
+│  • Keep text level and in focus                        │
+│  • Capture entire recipe                               │
+│                                                          │
+│                [📷 Capture]  [🖼️ From Gallery]         │
+└─────────────────────────────────────────────────────────┘
+
+Step 2: AI OCR + Interpretation
+• Google Vision API extracts text
+• Gemini Pro structures into recipe format
+• Handles handwriting, stains, faded text
+• Interprets abbreviations (tsp, tbsp, c, etc.)
+
+Step 3: Verification & Edit
+┌─────────────────────────────────────────────────────────┐
+│  Please verify the extracted recipe:                    │
+│                                                          │
+│  [Side-by-side: Original Photo | Extracted Text]       │
+│                                                          │
+│  ⚠️ Please check quantities carefully                   │
+│                                                          │
+│  [Editable fields for corrections]                     │
+│                                                          │
+│                               [Looks Good! Save →]      │
+└─────────────────────────────────────────────────────────┘
+
+6.4 MAGIC SUBSTITUTION FEATURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DESCRIPTION:
+AI-powered ingredient substitution finder that provides context-aware alternatives with reasoning.
+
+ACTIVATION:
+• From Recipe Detail: Tap [🔄 Substitute?] next to any ingredient
+• From Chat: Ask "What can I use instead of X?"
+• From Creation: During manual recipe entry
+
+INTERFACE:
+┌─────────────────────────────────────────────────────────┐
+│  Find substitute for: "Heavy Cream"                     │
+├─────────────────────────────────────────────────────────┤
+│  Why do you need a substitute?                          │
+│                                                          │
+│  [🌱 Vegan]  [🕎 Kosher]  [⚠️ Allergy]                 │
+│  [🏪 Don't have it]  [💰 Cheaper option]               │
+│                                                          │
+│  ────────── OR ──────────                               │
+│                                                          │
+│  [Text input: Describe your need...]                    │
+│                                                          │
+│                                    [Find Substitutes →] │
+└─────────────────────────────────────────────────────────┘
+
+AI RESPONSE FORMAT:
+┌─────────────────────────────────────────────────────────┐
+│  Substitutes for Heavy Cream (Vegan)                    │
+├─────────────────────────────────────────────────────────┤
+│  BEST MATCH                                             │
+│  ┌───────────────────────────────────────────────────┐  │
+│  │ 🥥 Coconut Cream (1 cup)                          │  │
+│  │                                                   │  │
+│  │ ✅ Same rich, creamy texture                      │  │
+│  │ ✅ Works in both sweet and savory dishes         │  │
+│  │ ⚠️ Adds subtle coconut flavor                     │  │
+│  │                                                   │  │
+│  │ 💡 Use the thick part from a refrigerated can    │  │
+│  │                                                   │  │
+│  │                              [Use This]           │  │
+│  └───────────────────────────────────────────────────┘  │
+│                                                          │
+│  OTHER OPTIONS                                          │
+│  ┌───────────────────────────────────────────────────┐  │
+│  │ Cashew Cream (1 cup blended soaked cashews)      │  │
+│  │ ✅ Neutral flavor  ⚠️ Requires blender           │  │
+│  └───────────────────────────────────────────────────┘  │
+│                                                          │
+│  ┌───────────────────────────────────────────────────┐  │
+│  │ Oat Cream (1 cup)                                 │  │
+│  │ ✅ Widely available  ⚠️ Slightly thinner          │  │
+│  └───────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────┘
+
+AI LOGIC & CONTEXT AWARENESS:
+The AI considers:
+1. Original ingredient's ROLE in recipe (binding, moisture, fat, flavor)
+2. Cooking METHOD (baking, sauce, whipping)
+3. User's CONSTRAINT (dietary, availability, cost)
+4. Cultural/regional AVAILABILITY
+5. Skill level required for substitute
+
+Example prompts sent to Gemini:
+```
+You are a professional chef helping home cooks find ingredient
+substitutes. Analyze this recipe and suggest alternatives.
+
+Recipe Context:
+- Dish: Chicken Tikka Masala
+- Ingredient to substitute: Heavy Cream (1 cup)
+- Role: Added at end for rich, creamy sauce
+- User constraint: Vegan
+
+Provide 2-3 substitutes ranked by quality. For each:
+1. Exact measurement
+2. Why it works (chemical/culinary reasoning)
+3. What changes in taste/texture
+4. Any special preparation notes
+
+Format as structured JSON.
+```
+
+6.5 SOUS CHEF CHAT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DESCRIPTION:
+Context-aware AI chat that answers questions about the specific recipe being viewed.
+
+INTERFACE:
+┌─────────────────────────────────────────────────────────┐
+│  💬 Chat with Recipe                              [X]   │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  🤖 Hi! I'm your Sous Chef. I have the full            │
+│      "Chicken Tikka Masala" recipe loaded. Ask me      │
+│      anything!                                          │
+│                                                          │
+│  ─────────────────────────────────────────────────      │
+│                                                          │
+│  👤 Can I use chicken thighs instead of breasts?        │
+│                                                          │
+│  🤖 Absolutely! Chicken thighs will actually be         │
+│      more flavorful and stay moist. Use the same       │
+│      quantity (500g) but increase cooking time in      │
+│      step 2 by 5 minutes to ensure they're fully       │
+│      cooked (internal temp 165°F/74°C).                │
+│                                                    12:34│
+│                                                          │
+│  ─────────────────────────────────────────────────      │
+│                                                          │
+│  👤 What does "simmer" mean exactly?                    │
+│                                                          │
+│  🤖 Simmering means keeping the liquid just below       │
+│      a boil. You'll see small bubbles occasionally     │
+│      breaking the surface, but not the rapid           │
+│      rolling boil. For this sauce, aim for medium-     │
+│      low heat. This gentle cooking helps flavors       │
+│      meld without reducing the sauce too quickly.      │
+│                                                    12:36│
+│                                                          │
+├─────────────────────────────────────────────────────────┤
+│  Suggested questions:                                   │
+│  • How do I know when the chicken is done?             │
+│  • Can I make this less spicy?                         │
+│  • What should the consistency be?                     │
+│                                                          │
+│  [Type your question...]                    [Send →]   │
+└─────────────────────────────────────────────────────────┘
+
+CHAT CAPABILITIES:
+✅ Ingredient substitutions
+✅ Technique explanations
+✅ Timing questions
+✅ Troubleshooting ("Why is my sauce too thin?")
+✅ Equipment alternatives ("Don't have a stand mixer")
+✅ Scaling adjustments
+✅ Storage and reheating advice
+✅ Pairing suggestions ("What wine goes with this?")
+✅ Dietary modifications
+
+🚫 Out of scope:
+• General cooking questions unrelated to the recipe
+• Recipe recommendations (redirect to main app)
+• Non-food topics
+
+TECHNICAL IMPLEMENTATION:
+• Streaming responses for real-time feel
+• Recipe context injected into system prompt
+• Chat history maintained per recipe
+• Suggested questions generated based on recipe complexity
+• Uses Gemini Flash for <2 second responses
+
+SYSTEM PROMPT STRUCTURE:
+```
+You are a professional sous chef assistant in Culinara. You have
+the following recipe loaded:
+
+Title: {recipe.title}
+Ingredients: {recipe.ingredients}
+Instructions: {recipe.instructions}
+Cook Time: {recipe.cookTime}
+Servings: {recipe.servings}
+
+The user is actively cooking or planning to cook this dish. Answer
+their questions with:
+1. Specific references to this recipe's ingredients/steps
+2. Professional but friendly tone
+3. Practical, actionable advice
+4. Safety warnings where relevant
+5. Concise responses (2-3 sentences unless more detail needed)
+
+If asked about something not related to this recipe, politely
+redirect them to create a new chat or search the app.
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+7. DESIGN SYSTEM & UI/UX PRINCIPLES
+═══════════════════════════════════════════════════════════════════════════════
+
+7.1 DESIGN PHILOSOPHY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CORE TENETS:
+1. "iOS-First Mindset" - Every interaction should feel native
+2. "Thumb-Zone Optimized" - Critical actions within natural reach
+3. "Glanceable Information" - Key details visible without scrolling
+4. "Gesture-Driven" - Swipes, long-presses, pull-to-refresh
+5. "Delightful Microinteractions" - Subtle animations that feel responsive
+
+INSPIRATION:
+• Apple App Store (card layouts, modals)
+• Instagram (feed, stories)
+• Things 3 (checkboxes, subtle animations)
+• Linear (clean, fast, keyboard-friendly)
+
+7.2 COLOR SYSTEM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TAILWIND CONFIG:
+```javascript
+colors: {
+  // Primary - Warm, appetizing orange
+  primary: {
+    50:  '#FFF7ED',
+    100: '#FFEDD5',
+    200: '#FED7AA',
+    300: '#FDBA74',
+    400: '#FB923C',  // Main brand color
+    500: '#F97316',
+    600: '#EA580C',
+    700: '#C2410C',
+    800: '#9A3412',
+    900: '#7C2D12',
+  },
+
+  // Neutral - iOS-style grays
+  neutral: {
+    50:  '#FAFAFA',
+    100: '#F5F5F5',
+    200: '#E5E5E5',
+    300: '#D4D4D4',
+    400: '#A3A3A3',
+    500: '#737373',
+    600: '#525252',
+    700: '#404040',
+    800: '#262626',
+    900: '#171717',
+  },
+
+  // Semantic colors
+  success: '#10B981',  // Green for checkmarks, success states
+  warning: '#F59E0B',  // Amber for warnings
+  error: '#EF4444',    // Red for errors, delete actions
+  info: '#3B82F6',     // Blue for informational messages
+}
+```
+
+DARK MODE:
+• Auto-detects system preference
+• Pure black (#000000) background for OLED efficiency
+• Reduced contrast to prevent eye strain
+• Elevated cards use #1C1C1E (iOS dark gray)
+
+7.3 TYPOGRAPHY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FONT STACK:
+```css
+font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+             "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+```
+
+TYPE SCALE:
+┌──────────────┬─────────┬─────────┬──────────────────────┐
+│ Style        │ Size    │ Weight  │ Usage                │
+├──────────────┼─────────┼─────────┼──────────────────────┤
+│ Display      │ 32px    │ 700     │ Hero headlines       │
+│ Headline     │ 24px    │ 600     │ Recipe titles        │
+│ Title        │ 20px    │ 600     │ Section headers      │
+│ Body Large   │ 17px    │ 400     │ Ingredients, steps   │
+│ Body         │ 15px    │ 400     │ Descriptions, chat   │
+│ Caption      │ 13px    │ 400     │ Metadata, timestamps │
+│ Overline     │ 11px    │ 600     │ Labels, categories   │
+└──────────────┴─────────┴─────────┴──────────────────────┘
+
+READABILITY:
+• Line height: 1.5 for body text, 1.2 for headlines
+• Max width: 680px for long-form text
+• Letter spacing: -0.01em for headlines (optical adjustment)
+
+7.4 COMPONENT LIBRARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RECIPE CARD COMPONENT:
+```typescript
+interface RecipeCardProps {
+  id: string
+  title: string
+  author: string
+  imageUrl: string
+  cookTime: number
+  servings: number
+  likes: number
+  isLiked: boolean
+  isSaved: boolean
+  isPrivate: boolean
+  onPress: () => void
+  onLike: () => void
+  onSave: () => void
+}
+```
+
+VISUAL SPEC:
+┌───────────────────────────────────────────────────┐
+│  ┌───────────────────────────────────────────┐    │ ← Card Container
+│  │                                           │    │   - Border radius: 16px
+│  │         [Recipe Hero Image]               │    │   - Shadow: soft drop shadow
+│  │              16:9 ratio                   │    │   - Padding: 12px
+│  │                                           │    │
+│  ├───────────────────────────────────────────┤    │
+│  │ Homemade Margherita Pizza         ❤️ 234  │    │ ← Title + Like count
+│  │ by @sarah_cooks                   🔖      │    │ ← Author + Save icon
+│  │ ⏱️ 30 min  👤 4 servings          🔒      │    │ ← Metadata + Privacy
+│  └───────────────────────────────────────────┘    │
+└───────────────────────────────────────────────────┘
+
+INTERACTIONS:
+• Tap anywhere → Open detail view
+• Long press → Context menu (Save, Share, Report)
+• Tap ❤️ → Like with spring animation
+• Tap 🔖 → Save with bookmark fill animation
+• Swipe left on own recipes → Delete option
+
+BUTTON COMPONENT:
+```typescript
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
+type ButtonSize = 'sm' | 'md' | 'lg'
+
+interface ButtonProps {
+  variant: ButtonVariant
+  size: ButtonSize
+  loading?: boolean
+  disabled?: boolean
+  icon?: ReactNode
+  children: ReactNode
+  onPress: () => void
+}
+```
+
+VARIANTS:
+• Primary: Solid orange background, white text (CTAs)
+• Secondary: Outline with orange border, orange text
+• Ghost: No background, gray text (cancel, back)
+• Danger: Red background, white text (delete)
+
+STATES:
+• Default → Hover (10% darker) → Active (pressed, 20% darker)
+• Loading → Show spinner, disable interaction
+• Disabled → 50% opacity, no hover effects
+
+MODAL COMPONENT:
+iOS-style bottom sheet that slides up:
+• Backdrop blur with 40% opacity black overlay
+• Spring animation (tension: 300, friction: 30)
+• Drag-to-dismiss gesture
+• Safe area aware (respects notch, bottom bar)
+
+INPUT COMPONENT:
+• Clean, borderless design with bottom border
+• Focus state: Orange bottom border, slight scale (1.02)
+• Error state: Red border, shake animation
+• Helper text below in 13px caption size
+
+7.5 ANIMATION PRINCIPLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TIMING:
+• Micro: 150ms (hover, checkbox checks)
+• Standard: 250ms (modal open, page transitions)
+• Elaborate: 400ms (multi-step animations)
+
+EASING:
+• Ease-out: UI entering viewport
+• Ease-in: UI leaving viewport
+• Spring: Playful interactions (like button, save)
+
+EXAMPLES:
+```javascript
+// Framer Motion variants
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+  transition: { duration: 0.25, ease: 'easeOut' }
+}
+
+const springScale = {
+  whileTap: { scale: 0.95 },
+  transition: { type: 'spring', stiffness: 300, damping: 30 }
+}
+```
+
+PERFORMANCE:
+• Prefer `transform` and `opacity` (GPU-accelerated)
+• Avoid animating `width`, `height`, `top`, `left`
+• Use `will-change` sparingly for known animated elements
+• Reduce motion for users with `prefers-reduced-motion`
+
+7.6 ACCESSIBILITY (A11Y)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WCAG 2.1 AA COMPLIANCE:
+• Color contrast: 4.5:1 minimum for text
+• Touch targets: Minimum 44x44px (iOS guideline)
+• Keyboard navigation: Full app usable with tab/enter/arrows
+• Screen reader support: Proper ARIA labels on all interactive elements
+• Focus indicators: Visible outline on keyboard focus
+
+SEMANTIC HTML:
+```html
+<button aria-label="Like recipe" aria-pressed="false">
+  <HeartIcon />
+  <span class="sr-only">234 likes</span>
+</button>
+
+<input
+  type="text"
+  aria-label="Recipe title"
+  aria-describedby="title-helper"
+  aria-invalid="false"
+/>
+```
+
+REDUCED MOTION:
+```css
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+8. AI INTEGRATION STRATEGY
+═══════════════════════════════════════════════════════════════════════════════
+
+8.1 MODEL SELECTION MATRIX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌──────────────────────┬────────────────┬──────────────────────────┐
+│ Use Case             │ Model          │ Rationale                │
+├──────────────────────┼────────────────┼──────────────────────────┤
+│ Recipe Generation    │ Gemini 2.0 Pro │ Complex reasoning,       │
+│                      │                │ structured output        │
+├──────────────────────┼────────────────┼──────────────────────────┤
+│ Ingredient Sub       │ Gemini Flash   │ Fast, simple task        │
+├──────────────────────┼────────────────┼──────────────────────────┤
+│ Recipe Chat          │ Gemini Flash   │ Conversational, quick    │
+├──────────────────────┼────────────────┼──────────────────────────┤
+│ Image Recognition    │ Gemini Vision  │ Multimodal capability    │
+├──────────────────────┼────────────────┼──────────────────────────┤
+│ OCR (Cookbook Scan)  │ Gemini Vision  │ Handles handwriting,     │
+│                      │                │ interprets context       │
+├──────────────────────┼────────────────┼──────────────────────────┤
+│ Recipe Import (URL)  │ Gemini Flash   │ Structured extraction    │
+└──────────────────────┴────────────────┴──────────────────────────┘
+
+8.2 PROMPT ENGINEERING TEMPLATES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RECIPE GENERATION PROMPT:
+```
+You are a professional chef creating a recipe for a home cook.
+
+INGREDIENTS AVAILABLE:
+{ingredientsList}
+
+CONSTRAINTS:
+- Time: {timeLimit} minutes max
+- Servings: {servings}
+- Cuisine preference: {cuisine}
+- Dietary restrictions: {dietary}
+
+Generate a complete recipe in the following JSON format:
+{
+  "title": "Creative, appetizing name",
+  "description": "One-sentence hook that makes you want to cook this",
+  "cookTime": number (minutes),
+  "prepTime": number (minutes),
+  "servings": number,
+  "difficulty": "Easy" | "Medium" | "Hard",
+  "ingredients": [
+    {
+      "item": "ingredient name",
+      "quantity": "amount",
+      "unit": "measurement",
+      "section": "Marinade" | "Sauce" | null
+    }
+  ],
+  "instructions": [
+    {
+      "step": number,
+      "instruction": "Clear, actionable step",
+      "time": number | null (if timing matters),
+      "tip": "Optional pro tip" | null
+    }
+  ],
+  "nutrition": {
+    "calories": number,
+    "protein": number,
+    "carbs": number,
+    "fat": number
+  },
+  "tags": ["tag1", "tag2"]
+}
+
+RULES:
+1. Only use provided ingredients (+ common pantry staples)
+2. Be creative but practical
+3. Include exact measurements
+4. Make instructions beginner-friendly
+5. Suggest plating/serving ideas in final step
+```
+
+SUBSTITUTION PROMPT:
+```
+You are a culinary expert helping find ingredient substitutions.
+
+RECIPE CONTEXT:
+- Dish: {recipeName}
+- Original ingredient: {originalIngredient}
+- Quantity needed: {quantity}
+- Cooking method: {method} (e.g., baking, sautéing)
+- Role in recipe: {role} (e.g., binding, moisture, flavor)
+
+USER CONSTRAINT:
+{constraint} (e.g., "Vegan", "Nut allergy", "Don't have it")
+
+Provide 2-3 substitutes in JSON:
+{
+  "substitutes": [
+    {
+      "name": "Substitute ingredient",
+      "quantity": "Adjusted amount if different",
+      "reasoning": "Why this works chemically/culinarily",
+      "tradeoffs": "What changes (taste, texture, color)",
+      "preparation": "Any special prep needed",
+      "confidence": "high" | "medium" | "low"
+    }
+  ]
+}
+
+Rank by best match first. Be honest about tradeoffs.
+```
+
+CHAT PROMPT (System):
+```
+You are a sous chef assistant in Culinara, helping a home cook
+with the recipe below. The cook may be actively cooking right now,
+so responses must be:
+- CONCISE (2-3 sentences unless more detail explicitly needed)
+- PRACTICAL (actionable advice, not theory)
+- SAFE (warn about food safety when relevant)
+- CONTEXTUAL (reference specific steps/ingredients from THIS recipe)
+
+RECIPE LOADED:
+────────────────
+{fullRecipeDetails}
+────────────────
+
+If the user asks something unrelated to this recipe, politely
+redirect: "I'm focused on helping with this specific recipe.
+For other cooking questions, try creating a new chat from the
+home screen!"
+
+If asked about substitutions, provide 1-2 quick suggestions but
+recommend using the "Magic Sub" button for detailed analysis.
+```
+
+8.3 RESPONSE STREAMING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+For chat and recipe generation, stream responses for real-time feel:
+
+```typescript
+async function streamRecipeGeneration(ingredients: string[]) {
+  const response = await ai.streamText({
+    model: 'gemini-2.0-pro',
+    prompt: generateRecipePrompt(ingredients),
+  })
+
+  for await (const chunk of response.textStream) {
+    // Update UI incrementally
+    updateRecipePreview(chunk)
+  }
+}
+```
+
+BENEFITS:
+• Perceived speed: Users see progress immediately
+• Engagement: Keeps attention during 5-10 second generation
+• Transparency: Shows AI "thinking" process
+
+8.4 ERROR HANDLING & FALLBACKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AI REQUEST LIFECYCLE:
+1. User initiates AI action
+2. Show loading state immediately
+3. Send request to Edge Function (proxy to Gemini)
+4. If timeout (>10s) → Show "Taking longer than expected..." message
+5. If error → Show friendly message + retry button
+6. If success → Smoothly transition to result
+
+ERROR MESSAGES:
+```typescript
+const AI_ERROR_MESSAGES = {
+  timeout: "The AI is taking a coffee break ☕ Try again?",
+  rate_limit: "Too many cooks in the kitchen! Try again in a moment.",
+  invalid_input: "Hmm, I need a bit more info. Can you add more details?",
+  generic: "Something went wrong. Mind trying that again?"
+}
+```
+
+GRACEFUL DEGRADATION:
+• If AI unavailable → Disable AI features, core app still works
+• If vision API fails → Allow manual ingredient entry
+• If chat fails → Show FAQ/tips instead
+
+═══════════════════════════════════════════════════════════════════════════════
+9. DATA MODELS & SCHEMA
+═══════════════════════════════════════════════════════════════════════════════
+
+9.1 DATABASE SCHEMA (PostgreSQL via Supabase)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+```sql
+-- Users table (managed by Supabase Auth)
+CREATE TABLE profiles (
+  id UUID REFERENCES auth.users PRIMARY KEY,
+  username TEXT UNIQUE NOT NULL,
+  display_name TEXT,
+  bio TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Recipes table
+CREATE TABLE recipes (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  image_url TEXT,
+  cook_time INTEGER, -- minutes
+  prep_time INTEGER, -- minutes
+  servings INTEGER,
+  difficulty TEXT CHECK (difficulty IN ('Easy', 'Medium', 'Hard')),
+  cuisine TEXT,
+  is_public BOOLEAN DEFAULT false,
+  source_type TEXT CHECK (source_type IN ('original', 'ai_generated', 'imported', 'ocr')),
+  source_url TEXT, -- if imported
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+
+  -- Full-text search
+  search_vector TSVECTOR GENERATED ALWAYS AS (
+    to_tsvector('english', title || ' ' || COALESCE(description, ''))
+  ) STORED
+);
+
+-- Ingredients table (many-to-many with recipes)
+CREATE TABLE recipe_ingredients (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
+  item TEXT NOT NULL,
+  quantity NUMERIC,
+  unit TEXT,
+  section TEXT, -- e.g., "Marinade", "Sauce"
+  order_index INTEGER
+);
+
+-- Instructions table
+CREATE TABLE recipe_instructions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
+  step_number INTEGER NOT NULL,
+  instruction TEXT NOT NULL,
+  time_minutes INTEGER, -- if step has specific timing
+  tip TEXT,
+  order_index INTEGER
+);
+
+-- Tags (for categorization)
+CREATE TABLE tags (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT UNIQUE NOT NULL,
+  category TEXT -- 'meal_type', 'dietary', 'cuisine', etc.
+);
+
+CREATE TABLE recipe_tags (
+  recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
+  tag_id UUID REFERENCES tags(id) ON DELETE CASCADE,
+  PRIMARY KEY (recipe_id, tag_id)
+);
+
+-- Likes
+CREATE TABLE recipe_likes (
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (user_id, recipe_id)
+);
+
+-- Saves/Bookmarks
+CREATE TABLE recipe_saves (
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
+  collection_id UUID REFERENCES collections(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (user_id, recipe_id)
+);
+
+-- Collections (user-organized recipe groups)
+CREATE TABLE collections (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  description TEXT,
+  is_public BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Follows (social graph)
+CREATE TABLE follows (
+  follower_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  following_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (follower_id, following_id),
+  CHECK (follower_id != following_id)
+);
+
+-- Comments
+CREATE TABLE comments (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  parent_id UUID REFERENCES comments(id) ON DELETE CASCADE, -- for nested replies
+  content TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Chat history (for Sous Chef conversations)
+CREATE TABLE chat_messages (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  role TEXT CHECK (role IN ('user', 'assistant')),
+  content TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Nutrition data (optional, linked to recipes)
+CREATE TABLE recipe_nutrition (
+  recipe_id UUID PRIMARY KEY REFERENCES recipes(id) ON DELETE CASCADE,
+  calories INTEGER,
+  protein_g NUMERIC,
+  carbs_g NUMERIC,
+  fat_g NUMERIC,
+  fiber_g NUMERIC,
+  sugar_g NUMERIC,
+  sodium_mg NUMERIC
+);
+
+-- Indexes for performance
+CREATE INDEX idx_recipes_user_id ON recipes(user_id);
+CREATE INDEX idx_recipes_is_public ON recipes(is_public);
+CREATE INDEX idx_recipes_created_at ON recipes(created_at DESC);
+CREATE INDEX idx_recipes_search ON recipes USING GIN(search_vector);
+CREATE INDEX idx_recipe_likes_recipe_id ON recipe_likes(recipe_id);
+CREATE INDEX idx_follows_following ON follows(following_id);
+```
+
+9.2 ROW LEVEL SECURITY (RLS) POLICIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+```sql
+-- Enable RLS
+ALTER TABLE recipes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+-- ... (enable for all tables)
+
+-- Recipes: Users can read public recipes or their own
+CREATE POLICY "Public recipes are viewable by everyone"
+  ON recipes FOR SELECT
+  USING (is_public = true);
+
+CREATE POLICY "Users can view their own recipes"
+  ON recipes FOR SELECT
+  USING (auth.uid() = user_id);
+
+-- Users can insert their own recipes
+CREATE POLICY "Users can create recipes"
+  ON recipes FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+-- Users can update their own recipes
+CREATE POLICY "Users can update own recipes"
+  ON recipes FOR UPDATE
+  USING (auth.uid() = user_id);
+
+-- Users can delete their own recipes
+CREATE POLICY "Users can delete own recipes"
+  ON recipes FOR DELETE
+  USING (auth.uid() = user_id);
+
+-- Likes: Anyone can like public recipes
+CREATE POLICY "Users can like public recipes"
+  ON recipe_likes FOR INSERT
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM recipes
+      WHERE id = recipe_id AND is_public = true
+    )
+  );
+```
+
+9.3 TYPESCRIPT TYPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+```typescript
+// src/types/recipe.ts
+
+export interface User {
+  id: string
+  username: string
+  displayName: string | null
+  bio: string | null
+  avatarUrl: string | null
+  createdAt: string
+}
+
+export interface Ingredient {
+  id: string
+  item: string
+  quantity: number | null
+  unit: string | null
+  section: string | null
+}
+
+export interface Instruction {
+  id: string
+  stepNumber: number
+  instruction: string
+  timeMinutes: number | null
+  tip: string | null
+}
+
+export interface Recipe {
+  id: string
+  userId: string
+  author?: User // Joined data
+  title: string
+  description: string | null
+  imageUrl: string | null
+  cookTime: number
+  prepTime: number
+  servings: number
+  difficulty: 'Easy' | 'Medium' | 'Hard'
+  cuisine: string | null
+  isPublic: boolean
+  sourceType: 'original' | 'ai_generated' | 'imported' | 'ocr'
+  sourceUrl: string | null
+  ingredients: Ingredient[]
+  instructions: Instruction[]
+  nutrition?: Nutrition
+  tags: Tag[]
+  likesCount: number
+  isLiked: boolean // Computed based on current user
+  isSaved: boolean // Computed based on current user
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Nutrition {
+  calories: number
+  proteinG: number
+  carbsG: number
+  fatG: number
+  fiberG: number | null
+  sugarG: number | null
+  sodiumMg: number | null
+}
+
+export interface Tag {
+  id: string
+  name: string
+  category: string
+}
+
+export interface Collection {
+  id: string
+  userId: string
+  name: string
+  description: string | null
+  isPublic: boolean
+  recipeCount: number
+  createdAt: string
+}
+
+export interface ChatMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  createdAt: string
+}
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+10. SUCCESS METRICS & KPIs
+═══════════════════════════════════════════════════════════════════════════════
+
+10.1 NORTH STAR METRIC
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**Weekly Active Recipe Interactions (WARI)**
+= Unique users who create, view, or interact with recipes weekly
+
+This metric captures core value: helping people cook.
+
+10.2 PRIMARY METRICS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ACQUISITION:
+• New user signups per week
+• Signup source attribution (organic, referral, social)
+• Signup→First recipe time (goal: <2 minutes)
+
+ENGAGEMENT:
+• Daily Active Users (DAU) / Weekly Active Users (WAU)
+• Average recipes created per user per month
+• AI interactions per session (goal: 5+)
+• Chat messages sent per recipe view
+• Substitution requests per recipe
+• Time spent in app per session (goal: 10+ min)
+
+RETENTION:
+• Day 1, Day 7, Day 30 retention rates (goal: 60%, 40%, 25%)
+• Weekly recipe creation streak (gamification metric)
+• Recipes cooked per month (self-reported or inferred from views)
+
+SOCIAL/VIRAL:
+• Public recipe publish rate (% of recipes made public)
+• Average likes per public recipe
+• Recipe shares (external + internal)
+• Follower growth rate
+• Recipe "forks" (community remixing)
+
+AI-SPECIFIC:
+• AI generation success rate (user keeps vs. regenerates)
+• Substitution acceptance rate
+• Chat satisfaction (thumbs up/down)
+• OCR accuracy (% requiring manual correction)
+
+10.3 ANALYTICS IMPLEMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TOOLS:
+• PostHog: Product analytics, session replay, feature flags
+• Sentry: Error tracking, performance monitoring
+• Google Analytics: Traffic sources, SEO performance
+
+KEY EVENTS TO TRACK:
+```typescript
+// User actions
+analytics.track('recipe_viewed', { recipeId, source: 'feed' })
+analytics.track('recipe_created', { method: 'ai_generated', timeToCreate })
+analytics.track('ingredient_substituted', { originalIngredient, reason })
+analytics.track('chat_message_sent', { recipeId, messageLength })
+analytics.track('recipe_shared', { platform: 'instagram' })
+
+// AI performance
+analytics.track('ai_generation_started', { ingredientCount })
+analytics.track('ai_generation_completed', { duration, success })
+analytics.track('ai_substitution_requested', { ingredient, constraint })
+analytics.track('ai_chat_response', { responseTime, tokenCount })
+
+// Funnel events
+analytics.track('signup_started')
+analytics.track('signup_completed', { method: 'google' })
+analytics.track('first_recipe_created', { timeSinceSignup })
+analytics.track('first_recipe_cooked', { timeSinceCreation })
+```
+
+10.4 A/B TESTING FRAMEWORK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Use PostHog feature flags for experiments:
+
+EXAMPLE TESTS:
+1. AI Generation CTA Copy
+   - Control: "Generate with AI"
+   - Variant: "Create recipe from ingredients"
+   - Metric: Click-through rate
+
+2. Recipe Card Layout
+   - Control: Image-first layout
+   - Variant: Title-first layout
+   - Metric: Recipe view rate
+
+3. Chat Prompt Suggestions
+   - Control: Generic suggestions
+   - Variant: Recipe-specific suggestions
+   - Metric: Chat engagement rate
+
+═══════════════════════════════════════════════════════════════════════════════
+11. NON-FUNCTIONAL REQUIREMENTS
+═══════════════════════════════════════════════════════════════════════════════
+
+11.1 PERFORMANCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WEB VITALS TARGETS:
+┌────────────────────┬─────────────┬─────────────┐
+│ Metric             │ Target      │ Max         │
+├────────────────────┼─────────────┼─────────────┤
+│ LCP (Largest       │ < 2.5s      │ < 4s        │
+│ Contentful Paint)  │             │             │
+├────────────────────┼─────────────┼─────────────┤
+│ FID (First Input   │ < 100ms     │ < 300ms     │
+│ Delay)             │             │             │
+├────────────────────┼─────────────┼─────────────┤
+│ CLS (Cumulative    │ < 0.1       │ < 0.25      │
+│ Layout Shift)      │             │             │
+├────────────────────┼─────────────┼─────────────┤
+│ TTFB (Time to      │ < 800ms     │ < 1.8s      │
+│ First Byte)        │             │             │
+└────────────────────┴─────────────┴─────────────┘
+
+AI RESPONSE TIMES:
+• Substitution: < 2 seconds
+• Chat response: < 3 seconds (streaming starts <500ms)
+• Recipe generation: < 8 seconds (streaming starts <1s)
+• Image recognition: < 5 seconds
+
+OPTIMIZATION STRATEGIES:
+• Code splitting: Lazy load routes and heavy components
+• Image optimization: WebP/AVIF with fallbacks, responsive sizes
+• CDN: Global edge network for static assets
+• Database: Indexes on all foreign keys and common query fields
+• Caching: Redis for frequently accessed recipes, user profiles
+• Bundle size: Target <200KB initial JS bundle
+
+11.2 SECURITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AUTHENTICATION:
+• Supabase Auth with JWT tokens
+• OAuth providers: Google, Apple Sign-In
+• Email verification required before full access
+• Password requirements: 12+ chars, mix of types
+• Session timeout: 30 days with refresh tokens
+• Rate limiting: 5 failed login attempts → 15 min lockout
+
+DATA PROTECTION:
+• All data encrypted in transit (TLS 1.3)
+• Sensitive data encrypted at rest (AES-256)
+• Row Level Security (RLS) enforces access control at DB level
+• API keys stored in environment variables, never committed
+• User data export available (GDPR compliance)
+• Account deletion cascades to all user data
+
+CONTENT SAFETY:
+• AI-generated content screened for harmful instructions
+• User-reported content review queue
+• Automated flagging of inappropriate keywords
+• Image upload scanning (NSFW detection via AI)
+
+API SECURITY:
+• Rate limiting: 100 req/min per IP, 1000/hour per user
+• CORS restricted to app domain
+• Input validation on all endpoints
+• SQL injection prevention via parameterized queries
+• XSS prevention via sanitized output
+
+11.3 SCALABILITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CAPACITY PLANNING (Year 1):
+• 100,000 users
+• 500,000 recipes
+• 10M API requests/month
+• 5TB storage (images)
+
+ARCHITECTURE DECISIONS:
+• Serverless functions: Auto-scale with traffic
+• Database: Supabase Pro plan (connection pooling, read replicas)
+• Storage: CDN-backed object storage
+• AI: Rate limiting + queueing for peak times
+• Monitoring: Alerts for 95th percentile latency spikes
+
+11.4 RELIABILITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+UPTIME TARGETS:
+• 99.9% uptime (8.76 hours downtime/year acceptable)
+• Zero-downtime deployments via Vercel
+• Database backups: Daily automated, 30-day retention
+• Disaster recovery: 4-hour RPO, 1-hour RTO
+
+ERROR BUDGETS:
+• Allow 0.1% of requests to fail (monitoring threshold)
+• If exceeded: Pause feature launches, focus on stability
+
+MONITORING:
+• Real-time error tracking (Sentry)
+• Performance monitoring (Vercel Analytics)
+• Synthetic monitoring (uptime checks every 1 min)
+• On-call rotation for P0 incidents
+
+11.5 COMPLIANCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+GDPR (EU):
+• Privacy policy clearly displayed
+• Cookie consent banner (EU visitors)
+• Data export API endpoint
+• Right to deletion (account deletion button)
+• Data processing agreements with third parties
+
+CCPA (California):
+• "Do Not Sell My Personal Information" link
+• Disclosure of data collection practices
+• Opt-out mechanism for data sharing
+
+COPPA (Children):
+• Age gate: Must be 13+ to create account
+• No collection of personal data from minors
+
+TERMS OF SERVICE:
+• User-generated content license (users grant Culinara display rights)
+• Attribution requirements for community recipes
+• Prohibited content guidelines
+• DMCA takedown process
+
+═══════════════════════════════════════════════════════════════════════════════
+12. MVP ROADMAP
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 PHASED EXECUTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PHASE 1: "POCKET CHEF" (Single User) ⏰ Current Focus
+──────────────────────────────────────────────────────────────────────────────
+GOAL: Fully functional personal recipe book with AI powers
+
+✅ MUST-HAVE FEATURES:
+┌──────────────────────────────────────────────────────────────────────┐
+│ • Recipe Feed                                                        │
+│   - View recipes in card layout                                     │
+│   - Filter by meal type (Breakfast, Lunch, Dinner, Dessert)        │
+│   - Search by title/ingredient                                      │
+│                                                                      │
+│ • Recipe Detail View                                                │
+│   - Full-screen modal with hero image                              │
+│   - Ingredient checklist with checkboxes                           │
+│   - Step-by-step instructions                                       │
+│   - Servings scaling (2x, 4x, etc.)                                │
+│                                                                      │
+│ • Recipe Creation                                                   │
+│   - ✨ AI Generation from ingredient list                          │
+│   - ✍️ Manual entry form                                           │
+│   - 🔗 Import from URL (recipe scraper)                            │
+│   - Image upload (placeholder until storage configured)            │
+│                                                                      │
+│ • Magic Substitution                                                │
+│   - Find ingredient alternatives (Vegan/Kosher/Allergy)            │
+│   - AI reasoning for each suggestion                               │
+│   - One-tap application to recipe                                  │
+│                                                                      │
+│ • Sous Chef Chat                                                    │
+│   - Recipe-specific Q&A                                             │
+│   - Streaming responses                                             │
+│   - Suggested questions                                             │
+│                                                                      │
+│ • Data Persistence                                                  │
+│   - localStorage for MVP (Phase 1)                                 │
+│   - JSON export/import for backup                                  │
+└──────────────────────────────────────────────────────────────────────┘
+
+TECH STACK (PHASE 1):
+• React + Vite + TypeScript
+• Tailwind CSS + Custom iOS components
+• Zustand for state management
+• Google Gemini API (Flash + Pro models)
+• Vercel deployment
+• No auth, no database (localStorage only)
+
+SUCCESS CRITERIA:
+✓ Can create 10 recipes in 10 minutes
+✓ AI generates usable recipes in <8 seconds
+✓ Chat responds in <3 seconds
+✓ Works offline (after initial load)
+✓ Passes accessibility audit (WCAG AA)
+
+──────────────────────────────────────────────────────────────────────────────
+PHASE 2: "SOCIAL KITCHEN" (Data & Community) ⏰ 3-6 months
+──────────────────────────────────────────────────────────────────────────────
+GOAL: Make it real with database, auth, and social features
+
+🚀 NEW FEATURES:
+┌──────────────────────────────────────────────────────────────────────┐
+│ • User Authentication                                                │
+│   - Email/password signup                                           │
+│   - Google OAuth                                                     │
+│   - Apple Sign-In                                                    │
+│   - Profile creation (username, bio, avatar)                        │
+│                                                                      │
+│ • Database Migration                                                │
+│   - Supabase PostgreSQL setup                                       │
+│   - Migrate localStorage data to cloud                              │
+│   - Row Level Security policies                                     │
+│                                                                      │
+│ • Image Storage                                                     │
+│   - Supabase Storage for recipe images                              │
+│   - Image upload/crop/resize UI                                     │
+│   - CDN delivery with optimization                                  │
+│                                                                      │
+│ • Public/Private Recipes                                            │
+│   - Toggle to share recipes publicly                                │
+│   - Community feed (trending, following)                            │
+│   - Recipe detail pages (shareable URLs)                            │
+│                                                                      │
+│ • Social Interactions                                               │
+│   - Like recipes (heart button)                                     │
+│   - Save to collections                                             │
+│   - Follow users                                                     │
+│   - Comment on recipes                                              │
+│                                                                      │
+│ • Collections                                                       │
+│   - Create custom recipe groups ("Weeknight Dinners")              │
+│   - Drag-and-drop organization                                      │
+│   - Share collections publicly                                      │
+│                                                                      │
+│ • Search & Discovery                                                │
+│   - Full-text search across all public recipes                     │
+│   - Filter by tags, cuisine, time, difficulty                      │
+│   - "For You" personalized feed (AI-powered)                       │
+└──────────────────────────────────────────────────────────────────────┘
+
+NEW TECH:
+• Supabase (Auth + Database + Storage)
+• React Query for server state
+• PostHog analytics
+• Sentry error tracking
+
+SUCCESS CRITERIA:
+✓ 1,000 users onboarded
+✓ 50% publish at least one recipe publicly
+✓ 30-day retention > 40%
+✓ <2% error rate
+
+──────────────────────────────────────────────────────────────────────────────
+PHASE 3: "AI VISIONARY" (Advanced Multimodal) ⏰ 6-12 months
+──────────────────────────────────────────────────────────────────────────────
+GOAL: Leverage camera, voice, and advanced AI capabilities
+
+🔮 ADVANCED FEATURES:
+┌──────────────────────────────────────────────────────────────────────┐
+│ • Snap-to-Recipe                                                     │
+│   - Photo ingredients in fridge                                     │
+│   - AI recognizes items (Gemini Vision)                             │
+│   - Generates recipe from visual inventory                          │
+│   - "What's in my fridge" saved inventory                           │
+│                                                                      │
+│ • Cookbook Digitizer                                                │
+│   - OCR for handwritten recipes                                     │
+│   - AI interprets abbreviations, stains, faded text                │
+│   - Converts to structured digital format                           │
+│   - Preserves notes/marginalia as tips                             │
+│                                                                      │
+│ • Voice Mode (Hands-Free Cooking)                                   │
+│   - Wake word: "Hey Culinara"                                       │
+│   - Commands: "Next step", "Set timer", "Repeat that"              │
+│   - Read instructions aloud                                         │
+│   - Adjust for cooking sounds (noise cancellation)                 │
+│                                                                      │
+│ • Smart Timers                                                      │
+│   - One-tap timers from each step                                   │
+│   - Background notifications                                        │
+│   - Multiple concurrent timers                                      │
+│                                                                      │
+│ • Meal Planning                                                     │
+│   - Weekly calendar view                                            │
+│   - Drag recipes to plan meals                                      │
+│   - Auto-generate shopping list from week's plan                   │
+│   - Export to grocery apps (Instacart, etc.)                       │
+│                                                                      │
+│ • Nutrition Tracking                                                │
+│   - Auto-calculate nutrition from ingredients                       │
+│   - Daily/weekly nutrition summaries                                │
+│   - Dietary goal tracking (macros, calories)                       │
+│                                                                      │
+│ • Recipe Versioning                                                 │
+│   - Track modifications over time                                   │
+│   - "Fork" community recipes                                        │
+│   - See what changed between versions                               │
+│   - Credit original authors                                         │
+└──────────────────────────────────────────────────────────────────────┘
+
+NEW TECH:
+• Gemini Vision API
+• Web Speech API / Deepgram
+• Push notifications (PWA)
+• Background sync (offline-first)
+
+SUCCESS CRITERIA:
+✓ 10,000+ active users
+✓ 100,000+ recipes created
+✓ 10+ AI interactions per user per week
+✓ Feature in App Store/Product Hunt
+
+──────────────────────────────────────────────────────────────────────────────
+FUTURE CONSIDERATIONS (12+ months)
+──────────────────────────────────────────────────────────────────────────────
+• Native mobile apps (React Native)
+• Partnerships with grocery delivery services
+• Smart kitchen device integrations (timers, scales)
+• Premium subscription tier (unlimited AI, advanced analytics)
+• Recipe monetization (creators earn from popular recipes)
+• Live cooking classes with video streaming
+• AR mode (overlay instructions on kitchen counter)
+
+═══════════════════════════════════════════════════════════════════════════════
+13. RISK ANALYSIS & MITIGATION
+═══════════════════════════════════════════════════════════════════════════════
+
+13.1 TECHNICAL RISKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RISK: AI API Costs Spiral Out of Control
+────────────────────────────────────────────
+LIKELIHOOD: Medium
+IMPACT: High
+
+MITIGATION:
+• Set hard spend limits in Google Cloud Console
+• Implement request queueing during peak times
+• Cache common AI responses (e.g., popular substitutions)
+• Use Flash model (cheaper) for 80% of requests
+• Monitor cost per user, set alerts
+
+──────────────────────────────────────────────────────────────────────────────
+RISK: AI Generates Unsafe/Inaccurate Recipes
+────────────────────────────────────────────
+LIKELIHOOD: Low
+IMPACT: Critical (food safety, legal liability)
+
+MITIGATION:
+• Include disclaimer: "AI-generated recipes should be verified"
+• Implement content filtering for dangerous instructions
+• Community reporting system
+• Manual review queue for flagged recipes
+• Terms of Service: Users cook at own risk
+• Consider liability insurance
+
+──────────────────────────────────────────────────────────────────────────────
+RISK: Database Costs Exceed Budget (Supabase)
+────────────────────────────────────────────
+LIKELIHOOD: Medium
+IMPACT: Medium
+
+MITIGATION:
+• Start with free tier, monitor closely
+• Implement pagination (limit query sizes)
+• Use read replicas for heavy read operations
+• Archive old/unused recipes after 2 years of inactivity
+• Optimize indexes, avoid N+1 queries
+
+──────────────────────────────────────────────────────────────────────────────
+RISK: Poor Performance on Low-End Mobile Devices
+────────────────────────────────────────────
+LIKELIHOOD: Medium
+IMPACT: Medium (affects user growth)
+
+MITIGATION:
+• Test on real devices (not just emulators)
+• Lazy load images, use WebP format
+• Minimize JavaScript bundle size
+• Use React.memo for expensive components
+• Implement virtualized scrolling for long lists
+• Service worker for offline caching
+
+13.2 PRODUCT RISKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RISK: Users Don't Trust AI-Generated Recipes
+────────────────────────────────────────────
+LIKELIHOOD: Medium
+IMPACT: High
+
+MITIGATION:
+• Show transparency: "Generated by Gemini 2.0"
+• Allow easy editing of AI output
+• Highlight when AI recipes are cooked/liked by community
+• Offer manual creation as equal option (not secondary)
+• Add user ratings/reviews to build trust
+
+──────────────────────────────────────────────────────────────────────────────
+RISK: Network Effects Don't Materialize (Social Features Unused)
+────────────────────────────────────────────
+LIKELIHOOD: High
+IMPACT: Medium
+
+MITIGATION:
+• Make app useful as single-player first (Phase 1)
+• Don't force social features
+• Provide clear value for going public (reach, feedback)
+• Curate featured recipes to inspire sharing
+• Make private the default, opt-in to public
+
+──────────────────────────────────────────────────────────────────────────────
+RISK: Competition from Established Players (Paprika, BigOven)
+────────────────────────────────────────────
+LIKELIHOOD: High
+IMPACT: Medium
+
+MITIGATION:
+• Focus on AI differentiation (they don't have this)
+• Emphasize "vibe coding" speed to market
+• Build community early (switching costs)
+• Niche down initially (e.g., "AI recipe app for vegans")
+• Superior UX (iOS-quality) as competitive moat
+
+13.3 BUSINESS RISKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RISK: No Clear Path to Monetization
+────────────────────────────────────────────
+LIKELIHOOD: Medium
+IMPACT: High (long-term sustainability)
+
+MITIGATION OPTIONS:
+• Freemium model: Free basic, paid premium AI features
+• Affiliate commissions: Link ingredients to grocery delivery
+• Creator monetization: Revenue share with popular recipe authors
+• Sponsored content: Featured recipes from brands (disclosed)
+• B2B licensing: White-label for meal kit companies
+
+──────────────────────────────────────────────────────────────────────────────
+RISK: GDPR/Privacy Regulation Violations
+────────────────────────────────────────────
+LIKELIHOOD: Low
+IMPACT: Critical (fines, shutdown)
+
+MITIGATION:
+• Consult legal counsel before launch
+• Privacy policy drafted by lawyer
+• Cookie consent for EU users
+• Data export/deletion APIs built from day one
+• Regular compliance audits
+
+──────────────────────────────────────────────────────────────────────────────
+RISK: Solo Founder Burnout / Scope Creep
+────────────────────────────────────────────
+LIKELIHOOD: High
+IMPACT: High
+
+MITIGATION:
+• Ruthlessly prioritize (MVP only)
+• Celebrate small wins
+• Set work boundaries (no coding after 8pm)
+• Automate testing/deployment early
+• Consider co-founder or early hire after traction
+• Use "vibe coding" prompts to maintain momentum
+
+═══════════════════════════════════════════════════════════════════════════════
+END OF PRD
+═══════════════════════════════════════════════════════════════════════════════
+
+This document is a living specification. As we build, we'll learn and adapt.
+The goal isn't to follow this perfectly—it's to ship something people love.
+
+🚀 Let's cook!
