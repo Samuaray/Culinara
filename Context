@@ -273,42 +273,50 @@ User Journey:
 5.1 TECHNOLOGY STACK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-FRONTEND:
+iOS NATIVE APPLICATION:
 ┌────────────────┬────────────────────────────────────────────────────────┐
-│ React 18+      │ Component framework with Concurrent Mode              │
-│ Vite 5+        │ Fast build tool, HMR for development                  │
-│ TypeScript     │ Type safety, better IDE support                       │
-│ Tailwind CSS   │ Utility-first styling with custom iOS design tokens   │
-│ Framer Motion  │ Fluid iOS-style animations                            │
-│ React Router   │ Client-side routing with smooth transitions           │
-│ Zustand        │ Lightweight state management (preferred over Context) │
-│ React Query    │ Server state, caching, optimistic updates             │
+│ Swift 6.0+     │ Primary programming language                          │
+│ SwiftUI        │ Declarative UI framework with native iOS components   │
+│ SwiftData      │ Modern data persistence (replaces Core Data)          │
+│ Combine        │ Reactive programming for async operations             │
+│ Observation    │ New @Observable macro for state management            │
+│ Swift Concurrency│ async/await for asynchronous operations             │
+│ PhotosUI       │ Native photo picker integration                       │
+│ AVFoundation   │ Camera capture for ingredient recognition             │
 └────────────────┴────────────────────────────────────────────────────────┘
 
 AI INTEGRATION:
 ┌────────────────┬────────────────────────────────────────────────────────┐
-│ Gemini 2.0     │ Primary AI engine                                     │
+│ Gemini 2.0     │ Primary AI engine via REST API                        │
 │ Flash Model    │ Fast operations: substitutions, quick queries         │
 │ Pro Model      │ Complex reasoning: recipe generation, modifications   │
 │ Vision API     │ Image recognition for ingredients and cookbook OCR    │
-│ Vercel AI SDK  │ Streaming responses, unified AI interface             │
+│ URLSession     │ Native HTTP client for API calls                      │
+│ AsyncStream    │ Streaming AI responses with Swift Concurrency         │
 └────────────────┴────────────────────────────────────────────────────────┘
 
-BACKEND & INFRASTRUCTURE:
+DATA & STORAGE (PHASE 1 - LOCAL):
+┌────────────────┬────────────────────────────────────────────────────────┐
+│ SwiftData      │ Local database for recipes (MVP - Phase 1)           │
+│ UserDefaults   │ App preferences and settings                          │
+│ FileManager    │ Local image storage and caching                       │
+│ CloudKit       │ Optional iCloud sync (future enhancement)             │
+└────────────────┴────────────────────────────────────────────────────────┘
+
+BACKEND (PHASE 2 - FUTURE):
 ┌────────────────┬────────────────────────────────────────────────────────┐
 │ Supabase       │ PostgreSQL database, Auth, Storage, Realtime          │
-│ Supabase Auth  │ Email/password, OAuth (Google, Apple)                 │
-│ Storage        │ Recipe images, user uploads, optimized delivery       │
+│ Supabase Auth  │ Email/password, OAuth (Google, Apple Sign-In)         │
+│ Supabase Storage│ Recipe images, user uploads, CDN delivery            │
 │ Row Level Sec  │ Database-level privacy controls                       │
-│ Edge Functions │ AI proxy, image processing, webhook handlers          │
 └────────────────┴────────────────────────────────────────────────────────┘
 
 DEPLOYMENT:
 ┌────────────────┬────────────────────────────────────────────────────────┐
-│ Vercel         │ Frontend hosting, edge network, preview deployments   │
-│ GitHub Actions │ CI/CD pipeline, automated testing                     │
-│ Sentry         │ Error tracking, performance monitoring                │
-│ PostHog        │ Product analytics, feature flags                      │
+│ Xcode Cloud    │ CI/CD pipeline, automated testing                     │
+│ TestFlight     │ Beta testing and distribution                         │
+│ App Store      │ Production distribution                               │
+│ Firebase       │ Analytics, crash reporting (optional)                 │
 └────────────────┴────────────────────────────────────────────────────────┘
 
 5.2 SYSTEM ARCHITECTURE DIAGRAM
@@ -1848,24 +1856,28 @@ GOAL: Fully functional personal recipe book with AI powers
 │   - Suggested questions                                             │
 │                                                                      │
 │ • Data Persistence                                                  │
-│   - localStorage for MVP (Phase 1)                                 │
+│   - SwiftData for local recipe storage (Phase 1)                  │
+│   - FileManager for recipe images                                  │
 │   - JSON export/import for backup                                  │
 └──────────────────────────────────────────────────────────────────────┘
 
 TECH STACK (PHASE 1):
-• React + Vite + TypeScript
-• Tailwind CSS + Custom iOS components
-• Zustand for state management
+• Swift 6.0+ with SwiftUI
+• SwiftData for local data persistence
+• @Observable for state management
+• Combine for reactive streams
 • Google Gemini API (Flash + Pro models)
-• Vercel deployment
-• No auth, no database (localStorage only)
+• Native iOS frameworks (PhotosUI, AVFoundation)
+• Xcode 16+ development environment
+• No auth, no backend (local-only Phase 1)
 
 SUCCESS CRITERIA:
 ✓ Can create 10 recipes in 10 minutes
 ✓ AI generates usable recipes in <8 seconds
-✓ Chat responds in <3 seconds
-✓ Works offline (after initial load)
-✓ Passes accessibility audit (WCAG AA)
+✓ Chat responds in <3 seconds with streaming
+✓ Works completely offline (local-first)
+✓ Native iOS feel with fluid animations
+✓ Supports iOS 17.0+
 
 ──────────────────────────────────────────────────────────────────────────────
 PHASE 2: "SOCIAL KITCHEN" (Data & Community) ⏰ 3-6 months
