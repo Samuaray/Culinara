@@ -1,0 +1,50 @@
+📱 Product Requirements Document (PRD)
+Project Name: Culinara
+Tagline: Your AI-Powered Social Cookbook.
+
+1. Product Vision
+   To create a mobile-first web application that feels exactly like a native iOS app. It bridges the gap between a recipe storage utility and a social network, using Generative AI to act as a “Sous Chef” that helps users create, understand, and modify recipes on the fly.
+1. Core User Problems Solved
+1. “I have ingredients but no ideas”: AI Recipe Generation solves the “what’s for dinner” problem.
+1. “I can’t eat this ingredient”: The AI Substitution feature instantly finds dietary alternatives (Vegan/Kosher/Allergy).
+1. “I don’t understand this step”: The “Chat with Recipe” feature allows users to ask specific questions about the cooking process.
+1. “Recipe blogs are cluttered”: A clean, distraction-free iOS-style interface that focuses solely on cooking.
+1. User Personas
+
+- The Improviser: Throws ingredients together, needs AI to formalize it into a recipe.
+- The Planner: Curates a specific list of recipes for the week.
+- The Learner: Needs help understanding terms and finding substitutes.
+
+1. Technical Stack (Recommended for Vibe Coding)
+
+- Frontend: React (Vite), Tailwind CSS (for styling).
+- Design System: Custom “iOS-Web” Design System (using the components we built).
+- AI: Google Gemini API (Flash 2.5 for speed, Pro 3 for complex reasoning).
+- Backend (Future): Supabase or Firebase (for Auth & Database).
+- State: React Context or Zustand.
+  🚀 MVP Roadmap (Phased Execution)
+  Since you are “vibe coding,” we will break this down into Prompt-sized phases.
+  Phase 1: The “Pocket Chef” (Single User)
+  Goal: A fully functional personal recipe book with AI powers. (This is close to where the code is now).
+- Features:
+  - Recipe Feed: View hardcoded + local storage recipes.
+  - Recipe Card: iOS App Store style cards.
+  - Detailed View: Full-screen modal with ingredients and steps.
+  - Creation Flow: Full-screen modal form with AI Auto-fill.
+  - Magic Sub: Ingredient substitution finder (Vegan/Kosher).
+  - Sous Chef Chat: Chat with the specific recipe context.
+- Data: localStorage only.
+  Phase 2: The “Social Kitchen” (Data & Images)
+  Goal: Make it real. Save data to a database and handle real images.
+- Features:
+  - User Auth: Sign up / Login.
+  - Database: Move from localStorage to Supabase/Firebase.
+  - Image Upload: Allow users to upload photos of their food (store in bucket).
+  - Public/Private Toggle: Actually filter the feed based on this flag.
+  - Likes/Saves: Ability to “heart” community recipes.
+    Phase 3: The “AI Visionary” (Advanced AI)
+    Goal: Utilize the camera and multimodal capabilities.
+- Features:
+  - Snap-to-Recipe: Take a photo of ingredients in your fridge -> AI generates a recipe.
+  - Cookbook Digitizer: Take a photo of a handwritten grandma’s recipe -> AI converts it to digital text in the app.
+  - Voice Mode: Hands-free “Next step” commands while cooking.
