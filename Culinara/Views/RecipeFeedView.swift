@@ -1,6 +1,17 @@
 import SwiftUI
 import SwiftData
 
+enum SortOption: String, CaseIterable {
+    case dateNewest = "Newest First"
+    case dateOldest = "Oldest First"
+    case nameAZ = "Name (A-Z)"
+    case nameZA = "Name (Z-A)"
+    case cookTimeLow = "Cook Time (Low-High)"
+    case cookTimeHigh = "Cook Time (High-Low)"
+    case difficultyEasy = "Difficulty (Easy-Hard)"
+    case difficultyHard = "Difficulty (Hard-Easy)"
+}
+
 struct RecipeFeedView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Recipe.createdAt, order: .reverse) private var recipes: [Recipe]
@@ -8,9 +19,11 @@ struct RecipeFeedView: View {
     @State private var searchText = ""
     @State private var selectedMealType: MealType?
     @State private var selectedRecipe: Recipe?
+    @State private var sortOption: SortOption = .dateNewest
+    @State private var showSortMenu = false
 
     var filteredRecipes: [Recipe] {
-        recipes.filter { recipe in
+        let filtered = recipes.filter { recipe in
             let matchesSearch = searchText.isEmpty ||
                 recipe.title.localizedCaseInsensitiveContains(searchText) ||
                 recipe.recipeDescription?.localizedCaseInsensitiveContains(searchText) == true
@@ -18,6 +31,37 @@ struct RecipeFeedView: View {
             let matchesMealType = selectedMealType == nil || recipe.mealType == selectedMealType
 
             return matchesSearch && matchesMealType
+        }
+
+        return sortRecipes(filtered)
+    }
+
+    func sortRecipes(_ recipes: [Recipe]) -> [Recipe] {
+        switch sortOption {
+        case .dateNewest:
+            return recipes.sorted { $0.createdAt > $1.createdAt }
+        case .dateOldest:
+            return recipes.sorted { $0.createdAt < $1.createdAt }
+        case .nameAZ:
+            return recipes.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+        case .nameZA:
+            return recipes.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedDescending }
+        case .cookTimeLow:
+            return recipes.sorted { $0.totalTime < $1.totalTime }
+        case .cookTimeHigh:
+            return recipes.sorted { $0.totalTime > $1.totalTime }
+        case .difficultyEasy:
+            return recipes.sorted { difficultyValue($0.difficulty) < difficultyValue($1.difficulty) }
+        case .difficultyHard:
+            return recipes.sorted { difficultyValue($0.difficulty) > difficultyValue($1.difficulty) }
+        }
+    }
+
+    func difficultyValue(_ difficulty: Difficulty) -> Int {
+        switch difficulty {
+        case .easy: return 1
+        case .medium: return 2
+        case .hard: return 3
         }
     }
 
@@ -74,6 +118,26 @@ struct RecipeFeedView: View {
             }
             .navigationTitle("Culinara")
             .searchable(text: $searchText, prompt: "Search recipes...")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        ForEach(SortOption.allCases, id: \.self) { option in
+                            Button {
+                                sortOption = option
+                            } label: {
+                                HStack {
+                                    Text(option.rawValue)
+                                    if sortOption == option {
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
+                            }
+                        }
+                    } label: {
+                        Label("Sort", systemImage: "arrow.up.arrow.down")
+                    }
+                }
+            }
             .sheet(item: $selectedRecipe) { recipe in
                 RecipeDetailView(recipe: recipe)
             }

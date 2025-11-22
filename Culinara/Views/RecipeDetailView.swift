@@ -13,6 +13,7 @@ struct RecipeDetailView: View {
     @State private var servings: Int
     @State private var showEditForm = false
     @State private var showDeleteConfirmation = false
+    @State private var showShareSheet = false
 
     init(recipe: Recipe) {
         self.recipe = recipe
@@ -21,6 +22,47 @@ struct RecipeDetailView: View {
 
     var servingMultiplier: Double {
         Double(servings) / Double(recipe.servings)
+    }
+
+    var shareText: String {
+        var text = "🍳 \(recipe.title)\n\n"
+
+        if let description = recipe.recipeDescription {
+            text += "\(description)\n\n"
+        }
+
+        text += "⏱️ Prep: \(recipe.prepTime) min | Cook: \(recipe.cookTime) min\n"
+        text += "🍽️ Servings: \(recipe.servings)\n"
+        text += "📊 Difficulty: \(recipe.difficulty.rawValue)\n"
+
+        if let cuisine = recipe.cuisine {
+            text += "🌍 Cuisine: \(cuisine)\n"
+        }
+
+        text += "\n📋 INGREDIENTS:\n"
+        for ingredient in recipe.ingredients {
+            text += "• \(ingredient.displayText)\n"
+        }
+
+        text += "\n👨‍🍳 INSTRUCTIONS:\n"
+        for instruction in recipe.instructions.sorted(by: { $0.stepNumber < $1.stepNumber }) {
+            text += "\(instruction.stepNumber). \(instruction.instruction)\n"
+            if let time = instruction.timeMinutes {
+                text += "   ⏱️ \(time) minutes\n"
+            }
+        }
+
+        if let nutrition = recipe.nutrition {
+            text += "\n🔢 NUTRITION (per serving):\n"
+            text += "Calories: \(nutrition.calories) | "
+            text += "Protein: \(Int(nutrition.proteinG))g | "
+            text += "Carbs: \(Int(nutrition.carbsG))g | "
+            text += "Fat: \(Int(nutrition.fatG))g\n"
+        }
+
+        text += "\n---\nMade with Culinara"
+
+        return text
     }
 
     var body: some View {
@@ -91,7 +133,9 @@ struct RecipeDetailView: View {
                             }
                             .buttonStyle(.bordered)
 
-                            ShareLink(item: recipe.title) {
+                            Button {
+                                showShareSheet = true
+                            } label: {
                                 Label("Share", systemImage: "square.and.arrow.up")
                                     .font(.subheadline.weight(.medium))
                                     .frame(maxWidth: .infinity)
@@ -222,6 +266,9 @@ struct RecipeDetailView: View {
                 Button("Cancel", role: .cancel) { }
             } message: {
                 Text("Are you sure you want to delete \"\(recipe.title)\"? This action cannot be undone.")
+            }
+            .sheet(isPresented: $showShareSheet) {
+                ShareSheet(items: [shareText])
             }
         }
     }
@@ -374,6 +421,19 @@ struct NutritionItem: View {
         }
         .frame(maxWidth: .infinity)
     }
+}
+
+// MARK: - Share Sheet
+
+struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 #Preview {
