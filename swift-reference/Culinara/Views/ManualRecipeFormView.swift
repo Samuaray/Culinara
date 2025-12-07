@@ -29,6 +29,10 @@ struct ManualRecipeFormView: View {
     @State private var instructions: [InstructionInput] = []
     @State private var newInstructionText = ""
 
+    // Tags
+    @State private var tagInput = ""
+    @State private var selectedTags: [String] = []
+
     // Image
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var selectedImageData: Data?
@@ -76,6 +80,9 @@ struct ManualRecipeFormView: View {
                     )
                 }
             )
+
+            // Convert existing tags
+            _selectedTags = State(initialValue: recipe.tags.map { $0.name })
         }
     }
 
@@ -146,6 +153,38 @@ struct ManualRecipeFormView: View {
                             Spacer()
                         }
                     }
+                }
+
+                // Tags Section
+                Section {
+                    // Display selected tags
+                    if !selectedTags.isEmpty {
+                        FlowLayout(spacing: 8) {
+                            ForEach(selectedTags, id: \.self) { tag in
+                                TagChip(tag: tag) {
+                                    selectedTags.removeAll { $0 == tag }
+                                }
+                            }
+                        }
+                    }
+
+                    // Add tag input
+                    HStack {
+                        TextField("Add tag", text: $tagInput)
+                            .textInputAutocapitalization(.never)
+
+                        Button {
+                            addTag()
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundStyle(.blue)
+                        }
+                        .disabled(tagInput.isEmpty)
+                    }
+                } header: {
+                    Text("Tags")
+                } footer: {
+                    Text("Add tags to organize and categorize your recipes (e.g., vegetarian, quick, comfort-food)")
                 }
 
                 // Ingredients Section
@@ -298,6 +337,14 @@ struct ManualRecipeFormView: View {
         newInstructionText = ""
     }
 
+    private func addTag() {
+        let trimmed = tagInput.trimmingCharacters(in: .whitespaces).lowercased()
+        guard !trimmed.isEmpty, !selectedTags.contains(trimmed) else { return }
+
+        selectedTags.append(trimmed)
+        tagInput = ""
+    }
+
     private func validateForm() -> Bool {
         if title.trimmingCharacters(in: .whitespaces).isEmpty {
             validationMessage = "Please enter a recipe title"
@@ -336,9 +383,10 @@ struct ManualRecipeFormView: View {
             existingRecipe.imageData = selectedImageData
             existingRecipe.updatedAt = Date()
 
-            // Remove old ingredients and instructions
+            // Remove old ingredients, instructions, and tags
             existingRecipe.ingredients.forEach { modelContext.delete($0) }
             existingRecipe.instructions.forEach { modelContext.delete($0) }
+            existingRecipe.tags.removeAll()
 
             // Add new ingredients
             for ingredientInput in ingredients {
@@ -359,6 +407,12 @@ struct ManualRecipeFormView: View {
                     tip: instructionInput.tip.isEmpty ? nil : instructionInput.tip
                 )
                 existingRecipe.instructions.append(instruction)
+            }
+
+            // Add tags
+            for tagName in selectedTags {
+                let tag = Tag(name: tagName, category: "custom")
+                existingRecipe.tags.append(tag)
             }
         } else {
             // Create new recipe
@@ -397,6 +451,12 @@ struct ManualRecipeFormView: View {
                 recipe.instructions.append(instruction)
             }
 
+            // Add tags
+            for tagName in selectedTags {
+                let tag = Tag(name: tagName, category: "custom")
+                recipe.tags.append(tag)
+            }
+
             modelContext.insert(recipe)
         }
 
@@ -428,6 +488,82 @@ struct InstructionInput {
     var instruction: String
     var timeMinutes: String
     var tip: String
+}
+
+// MARK: - Supporting Views
+
+struct TagChip: View {
+    let tag: String
+    let onRemove: () -> Void
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Text(tag)
+                .font(.caption)
+                .foregroundStyle(.white)
+
+            Button(action: onRemove) {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.8))
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(Color.blue)
+        .clipShape(Capsule())
+    }
+}
+
+struct FlowLayout: Layout {
+    var spacing: CGFloat = 8
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let result = FlowResult(
+            in: proposal.replacingUnspecifiedDimensions().width,
+            subviews: subviews,
+            spacing: spacing
+        )
+        return result.size
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let result = FlowResult(
+            in: bounds.width,
+            subviews: subviews,
+            spacing: spacing
+        )
+        for (index, subview) in subviews.enumerated() {
+            subview.place(at: CGPoint(x: bounds.minX + result.positions[index].x, y: bounds.minY + result.positions[index].y), proposal: .unspecified)
+        }
+    }
+
+    struct FlowResult {
+        var size: CGSize = .zero
+        var positions: [CGPoint] = []
+
+        init(in maxWidth: CGFloat, subviews: Subviews, spacing: CGFloat) {
+            var x: CGFloat = 0
+            var y: CGFloat = 0
+            var lineHeight: CGFloat = 0
+
+            for subview in subviews {
+                let size = subview.sizeThatFits(.unspecified)
+
+                if x + size.width > maxWidth && x > 0 {
+                    x = 0
+                    y += lineHeight + spacing
+                    lineHeight = 0
+                }
+
+                positions.append(CGPoint(x: x, y: y))
+                lineHeight = max(lineHeight, size.height)
+                x += size.width + spacing
+            }
+
+            self.size = CGSize(width: maxWidth, height: y + lineHeight)
+        }
+    }
 }
 
 // MARK: - Preview
